@@ -1,7 +1,7 @@
 bdTemplateRain-RainTpl3
 =======================
 
-Extention for RainTPL 3 (https://github.com/rainphp/raintpl3)
+Extension for RainTPL 3 (https://github.com/rainphp/raintpl3)
 
 RaintTPL3 forces you to store and call template files and cache files in one and the same base directory.
 
