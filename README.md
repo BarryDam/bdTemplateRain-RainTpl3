@@ -29,6 +29,12 @@ result:
 The cache file of the rendered template will be stored in 'X/your/location/cache/template.tpl'
 
 
+Requires
+=======================
+In php define 'URL_BASE' your url root (http://myroot.com/) and 'FILE_PATH' , your absolute filepath ('X/var/myroot.com/root/')
+
+Define URL_BASE as your url root
+
 
 $template_info support in RainTPL 3
 =======================
