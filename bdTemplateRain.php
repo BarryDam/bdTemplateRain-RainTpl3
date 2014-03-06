@@ -56,13 +56,12 @@
 		/* the raintpl functions will be set according to the template file */
 		private function setRainTPLConfig(){
 			$strTemplateBaseName 	=	$this->bdTemplateRainData['strFileName'];
-			$strTemplateDir 		= 	str_replace('/'.$strTemplateBaseName, '', $this->bdTemplateRainData['strFileLoc']);
+			$strTemplateDir 		= 	str_replace($strTemplateBaseName, '', $this->bdTemplateRainData['strFileLoc']);
 			self::configure( 'tpl_dir', $strTemplateDir );
 			self::configure( 'base_url', URL_BASE );
 			self::configure( 'tpl_ext', 'tpl' );
-			self::configure( 'cache_dir', $strTemplateDir.'/cache' );
-			self::configure( 'auto_escape', false );			
-
+			self::configure( 'cache_dir', $strTemplateDir.'cache/' );
+			self::configure( 'auto_escape', false );
 		}
 
 		
