@@ -1,18 +1,18 @@
 <?php
 	/**
-	 * bdTemplateRain 	
-	 * @version 2.0
-	 *	Last edit 05-03-2014 by Barry
+	 * bdTemplateRain
+	 * @version 2.0.1
+	 *	Last edit 06-05-2014 by Barry
 	 */
 
 	/**
 	 * 	maakt gebruik van Rain.TPL versie 3 READ > https://github.com/rainphp/raintpl3
-	 *	
+	 *
 	 *	Ik heb dit gemaakt zodat de settings afhankelijk zijn van elke template op zichzelf
 	 *	rainTPL gebruik maar 1 template + cache dir voor alles!.. alle tpl files zouden dus maar in 1 en dezelfde map kunnen staan.. niet handig dus
 	 *
 	 *	op de locatie van de template wordt een map cache aangemaakt.
-	 *	
+	 *
 	 *	Er zijn 2 manieren waarop je render kan maken  :
 	 *
 	 *
@@ -21,7 +21,7 @@
 	 *	$tpl->assign('test','voorbeeld') of $tpl->assign(array('test'=>'voorbeeld','test2'=>'voorbeeld2',)); // functie van RainTPL zelf
 	 *	$render = $tpl->render(); // gebruikt RaintTPL->draw functie en geeft de gerenderde template terug ;
 	 *	echo $render ; of doe er iets anders mee
-	 *	
+	 *
 	 *	manier 2 :
 	 *	$render = bdTemplateRain::render(FILE_PATH.'locatie/van/de/template.tpl',array('test'=>'voorbeeld'));
 	 *	echo $render;
@@ -49,7 +49,7 @@
 					$this->bdTemplateRainData['strFileLoc'] 	= $getTemplateLoc;
 					$this->bdTemplateRainData['strFileName'] 	= basename( str_replace("\\", "/", $getTemplateLoc) );
 				}
-				$this->setRainTPLConfig();			
+				$this->setRainTPLConfig();
 			}
 		}
 
@@ -64,7 +64,7 @@
 			self::configure( 'auto_escape', false );
 		}
 
-		
+
 		/**
 		*	@return (string) $strRender rendered template
 		**/
@@ -73,10 +73,20 @@
 			/* non static */
 				if(isset($this) && get_class($this) === 'bdTemplateRain' ){
 					/* RainTPL draw function first param is the template name without extension */
-						$strTemplateName 	= str_replace('.tpl','',$this->bdTemplateRainData['strFileName'] );
+					$strTemplateName 	= str_replace('.tpl','',$this->bdTemplateRainData['strFileName'] );
+					$arrTemplate_info 	= $this->var;
+					/**
+					 * tempate_data
+					 */
+					$this->assign('template_data', $this->var);
+					/**
+					 * Rain TPL v3 drops support of $template_info.. so lets bring it back :D
+					 */
+					$this->assign('template_info', '<pre>:'. nl2br(print_r($arrTemplate_info, true)).'</pre>');
 					/* return the rendered template (don't echo it here) */
-					
-					$strRender =  $this->draw($strTemplateName, $return_string = true);	
+					BIC_varLangReplace::setReplacements($this->var);
+
+					$strRender =  $this->draw($strTemplateName, $return_string = true);
 					/* SRV DEBUG */
 						if (
 							( in_array($_SERVER['REMOTE_ADDR'],array('80.101.92.145','84.30.155.204','84.30.159.111')) )
@@ -98,22 +108,19 @@
 					$tpl = new bdTemplateRain($arguments[0]);
 					/* assigns */
 						if(!empty($arguments[1])) {
-							/**
-							 * Rain TPL v3 drops support of $template_info.. so lets bring it back :D
-							 */
-							$arrTemplateData = $arguments[1];
-							$arrTemplateData['template_info'] = 'Template Info:<pre>'.print_r($arrTemplateData, true).'</pre>';
 							/* Assign render data */
-							$tpl->assign($arrTemplateData);
-						} 
+							$tpl->assign($arguments[1]);
+						}
 					/* return the render*/
 					$strRender = $tpl->render();
 				}
-			/* return the render */	
-			return $strRender;						
+			/* return the render */
+			return $strRender;
 		}
 
 	}
+
+	bdTemplateRain::registerPlugin( new BIC_varLangReplace() );
 
 	class bdMessage{
 		public function __construct($getType=false,$getMessage=false,$boolUseParent=false){
@@ -129,7 +136,7 @@
 			}else{
 				$arrFileThrowingError 	= array_shift($arrDebugBackTrace);
 			}
-			
+
 			$strFileName			= str_replace(FILE_PATH,'',$arrFileThrowingError['file']);
 			$intLine				= $arrFileThrowingError['line'];
 			echo 'BD ERROR: '.$strMessage.' in <strong>'.$strFileName.'</strong> on line <strong>'.$intLine.'</strong>';
