@@ -63,59 +63,47 @@
 			self::configure( 'cache_dir', $strTemplateDir.'cache/' );
 			self::configure( 'auto_escape', false );
 		}
+		/**
+		 * Overwrites RainTpl function draw
+		 */
+		public function draw($getStrTemplateName = false, $getReturnString = true)
+		{
+			/* RainTPL draw function first param is the template name without extension */
+			if (! $getStrTemplateName)
+				$strTemplateName 	= str_replace('.tpl','',$this->bdTemplateRainData['strFileName'] );
+			// set extra data to template
+			$arrTemplate_info 	= $this->var;
+			$this->assign('template_data', $this->var);
+			$this->assign('template_info', '<pre>:'. nl2br(print_r($arrTemplate_info, true)).'</pre>');
+			// call plugin
+			BIC_varLangReplace::setReplacements($this->var);
+			// parent draw
+			$strRender 	=  parent::draw($strTemplateName, $getReturnString);
+			// get the filename
+			$strFile 	= basename($this->bdTemplateRainData['strFileLoc']);
+			// return render
+			return '
+				<!-- Start template '.$strFile.'  -->
+				'.$strRender.'
+				<!-- End template '.$strFile.'-->
+			';
+		}
 
 
 		/**
 		*	@return (string) $strRender rendered template
 		**/
-		public function render(){
-			$strRender = '';
-			/* non static */
-				if(isset($this) && get_class($this) === 'bdTemplateRain' ){
-					/* RainTPL draw function first param is the template name without extension */
-					$strTemplateName 	= str_replace('.tpl','',$this->bdTemplateRainData['strFileName'] );
-					$arrTemplate_info 	= $this->var;
-					/**
-					 * tempate_data
-					 */
-					$this->assign('template_data', $this->var);
-					/**
-					 * Rain TPL v3 drops support of $template_info.. so lets bring it back :D
-					 */
-					$this->assign('template_info', '<pre>:'. nl2br(print_r($arrTemplate_info, true)).'</pre>');
-					/* return the rendered template (don't echo it here) */
-					BIC_varLangReplace::setReplacements($this->var);
-
-					$strRender =  $this->draw($strTemplateName, $return_string = true);
-					/* SRV DEBUG */
-						if (
-							( in_array($_SERVER['REMOTE_ADDR'],array('80.101.92.145','84.30.155.204','84.30.159.111')) )
-							|| $_SERVER['HTTP_HOST'] == 'srv'
-							){
-							$strFile = str_replace(FILE_PATH,'',$this->bdTemplateRainData['strFileLoc']);
-							$strRender = '
-								<!-- Start template '.$strFile.'  -->
-								'.$strRender.'
-								<!-- End template '.$strFile.'-->
-							';
-						}
-					/* SRV DEBUG END */
+		public static function render(){
+			$arguments = func_get_args(); // $arguments[0] = template file loc $arguments[1] = assigns
+			if(!$arguments || empty($arguments[0])) return false;
+			$tpl = new bdTemplateRain($arguments[0]);
+			/* assigns */
+				if(!empty($arguments[1])) {
+					/* Assign render data */
+					$tpl->assign($arguments[1]);
 				}
-			/* static approach */
-				else{
-					$arguments = func_get_args(); // $arguments[0] = template file loc $arguments[1] = assigns
-					if(!$arguments || empty($arguments[0])) return false;
-					$tpl = new bdTemplateRain($arguments[0]);
-					/* assigns */
-						if(!empty($arguments[1])) {
-							/* Assign render data */
-							$tpl->assign($arguments[1]);
-						}
-					/* return the render*/
-					$strRender = $tpl->render();
-				}
-			/* return the render */
-			return $strRender;
+			/* return the render*/
+			return $tpl->draw();
 		}
 
 	}
