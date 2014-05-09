@@ -1,7 +1,7 @@
 <?php
 	/**
 	 * bdTemplateRain
-	 * @version 2.0.1
+	 * @version 2.1.0
 	 *	Last edit 06-05-2014 by Barry
 	 */
 
@@ -15,16 +15,15 @@
 	 *
 	 *	Er zijn 2 manieren waarop je render kan maken  :
 	 *
-	 *
-	 *	manier 1 :
-	 *	$tpl = new bdTemplateRain(FILE_PATH.'locatie/van/de/template.tpl');
-	 *	$tpl->assign('test','voorbeeld') of $tpl->assign(array('test'=>'voorbeeld','test2'=>'voorbeeld2',)); // functie van RainTPL zelf
-	 *	$render = $tpl->render(); // gebruikt RaintTPL->draw functie en geeft de gerenderde template terug ;
-	 *	echo $render ; of doe er iets anders mee
-	 *
-	 *	manier 2 :
+	 * 	manier 1 :
 	 *	$render = bdTemplateRain::render(FILE_PATH.'locatie/van/de/template.tpl',array('test'=>'voorbeeld'));
 	 *	echo $render;
+	 *
+	 *	manier 2:
+	 *	$tpl = new bdTemplateRain(FILE_PATH.'locatie/van/de/template.tpl');
+	 *	$tpl->assign('test','voorbeeld') of $tpl->assign(array('test'=>'voorbeeld','test2'=>'voorbeeld2',)); // functie van RainTPL zelf
+	 *	$render = $tpl->draw(); // gebruikt RaintTPL->draw functie en geeft de gerenderde template terug ;
+	 *	echo $render ; of doe er iets anders mee
 	 *
 	 *	templates opbouwen : https://github.com/rainphp/raintpl3/wiki
 	 *
