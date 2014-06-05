@@ -40,7 +40,7 @@
 			if(!$getTemplateLoc){
 				bdMessage::error('No template passed!');
 			}else{
-				$file = strtolower($getTemplateLoc);
+				$file = $getTemplateLoc;
 				if(!file_exists($file)){
 					bdMessage::error('File <strong>'.$file.'</strong> does not exist!');
 				}else{
