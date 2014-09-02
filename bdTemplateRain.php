@@ -91,17 +91,21 @@
 
 		/**
 		*	@return (string) $strRender rendered template
+		*	@param 1 file loc of template
+		*	@param 2 array with tpl vars
+		*	@param 3 (optional) custom cache directory
 		**/
 		public static function render(){
-			$arguments = func_get_args(); // $arguments[0] = template file loc $arguments[1] = assigns
+			$arguments = func_get_args();
 			if(!$arguments || empty($arguments[0])) return false;
 			$tpl = new bdTemplateRain($arguments[0]);
-			/* assigns */
-				if(!empty($arguments[1])) {
-					/* Assign render data */
-					$tpl->assign($arguments[1]);
-				}
-			/* return the render*/
+			// assign tpl vars
+			if(! empty($arguments[1]))
+				$tpl->assign($arguments[1]);
+			// custom cache dir?
+			if (! empty($arguments[2]))
+				self::configure( 'cache_dir', $arguments[2] );
+			// return the render
 			return $tpl->draw();
 		}
 
