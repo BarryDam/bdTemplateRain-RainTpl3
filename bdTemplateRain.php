@@ -38,11 +38,13 @@
 
 		public function __construct($getTemplateLoc=false){
 			if(!$getTemplateLoc){
-				bdMessage::error('No template passed!');
+				//bdMessage::error('No template passed!');
+				throw new Exception('No template passed!', 1);
 			}else{
 				$file = $getTemplateLoc;
 				if(!file_exists($file)){
-					bdMessage::error('File <strong>'.$file.'</strong> does not exist!');
+					//bdMessage::error('File <strong>'.$file.'</strong> does not exist!');
+					throw new Exception('Template <strong>'.$file.'</strong> does not exist!', 1);
 				}else{
 					$this->bdTemplateRainData['strRender']		= file_get_contents($file);
 					$this->bdTemplateRainData['strFileLoc'] 	= $getTemplateLoc;
