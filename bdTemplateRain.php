@@ -83,11 +83,12 @@
 			// get the filename
 			$strFile 	= basename($this->bdTemplateRainData['strFileLoc']);
 			// return render
-			return '
-				<!-- Start template '.$strFile.'  -->
-				'.$strRender.'
-				<!-- End template '.$strFile.'-->
-			';
+			return ($strFile != 'index.tpl')
+				? '
+					<!-- Start template '.$strFile.'  -->
+					'.$strRender.'
+					<!-- End template '.$strFile.'-->
+				' : $strRender;
 		}
 
 
